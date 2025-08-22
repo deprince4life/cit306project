@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Dashboard — Student Notification</title>
+
+  <!-- Bootstrap & Icons -->
+  <link href="./bootstrap.min.css" rel="stylesheet"/>
+  <link href="./bootstrap-icons.css" rel="stylesheet"/>
+
+  <!-- App CSS -->
+  <link rel="stylesheet" href="./admincss.css"/>
+</head>
+<body class="theme-light">
+  <!-- Sidebar -->
+  <aside id="sidebar" class="sidebar">
+    <h4 class="sidebar-title">Admin Dashboard</h4>
+    <nav class="nav flex-column">
+      <a href="#" class="nav-link active" data-section="dashboard" data-bs-toggle="tooltip" data-bs-placement="right" title="Dashboard">
+        <i class="bi bi-house-door"></i><span>Dashboard</span>
+      </a>
+      <a href="#" class="nav-link" data-section="announcement" data-bs-toggle="tooltip" data-bs-placement="right" title="Announcements">
+        <i class="bi bi-megaphone"></i><span>Announcements</span>
+      </a>
+      <a href="#" class="nav-link" data-section="events" data-bs-toggle="tooltip" data-bs-placement="right" title="Events">
+        <i class="bi bi-calendar-event"></i><span>Events</span>
+      </a>
+      <a href="#" class="nav-link" data-section="archive" data-bs-toggle="tooltip" data-bs-placement="right" title="Archive">
+        <i class="bi bi-archive"></i><span>Archive</span>
+      </a>
+      <a href="#" class="nav-link" data-section="students" data-bs-toggle="tooltip" data-bs-placement="right" title="Students">
+        <i class="bi bi-people"></i><span>Students</span>
+      </a>
+      <a href="#" class="nav-link" data-section="profile" data-bs-toggle="tooltip" data-bs-placement="right" title="Admin Profile">
+        <i class="bi bi-person-circle"></i><span>Admin Profile</span>
+      </a>
+      <a href="#" class="nav-link" data-section="settings" data-bs-toggle="tooltip" data-bs-placement="right" title="Settings">
+        <i class="bi bi-gear"></i><span>Settings</span>
+      </a>
+    </nav>
+  </aside>
+
+  <!-- Main -->
+  <main id="mainContent" class="main-content">
+    <!-- Top Navbar -->
+    <nav class="navbar navbar-expand bg-primary text-white shadow-sm topbar">
+      <div class="container-fluid">
+        <button id="toggleBtn" class="btn btn-outline-light me-2"><i class="bi bi-list"></i></button>
+        <span class="navbar-brand mb-0 h4 text-white">Admin Dashboard</span>
+        <div class="ms-auto d-flex align-items-center gap-3">
+          <button id="darkToggle" class="btn btn-outline-light" data-bs-toggle="tooltip" title="Toggle Dark Mode">
+            <i class="bi bi-moon-stars"></i>
+          </button>
+          <span id="adminNameTop" class="d-none d-md-inline">Alexander Pierce</span>
+          <img src="https://via.placeholder.com/40" class="rounded-circle d-none d-md-inline" alt="Admin"/>
+          <a href="./loginregisterpage.html" class="btn btn-outline-light btn-sm">Logout</a>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Sections -->
+    <!-- DASHBOARD -->
+    <section id="dashboard" class="section">
+      <h4 class="mb-3">Overview</h4>
+      <div id="alertsContainer" class="mb-3"></div>
+      <div class="row g-4">
+        <div class="col-6 col-md-3">
+          <div class="stat-card bg-blue shadow-sm">
+            <div class="stat-value" id="totalStudents">0</div>
+            <div class="stat-label">Total Students</div>
+          </div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="stat-card bg-green shadow-sm">
+            <div class="stat-value" id="upcomingEvents">0</div>
+            <div class="stat-label">Upcoming Events</div>
+          </div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="stat-card bg-orange shadow-sm">
+            <div class="stat-value" id="announcementsCount">0</div>
+            <div class="stat-label">Announcements</div>
+          </div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="stat-card bg-red shadow-sm">
+            <div class="stat-value" id="alertsCount">0</div>
+            <div class="stat-label">Event Alerts (7d)</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ANNOUNCEMENTS -->
+    <section id="announcement" class="section d-none">
+      <div class="d-flex align-items-center justify-content-between mb-3">
+        <h4 class="mb-0">Announcements</h4>
+        <input id="announcementSearch" class="form-control form-control-sm w-auto" placeholder="Search announcements..."/>
+      </div>
+
+      <div class="card shadow-sm p-3 mb-3">
+        <h6 class="mb-3">Post New Announcement</h6>
+        <form id="announcementForm" class="row g-2">
+          <div class="col-md-4">
+            <label class="form-label">Title</label>
+            <input type="text" class="form-control" id="aTitle" required>
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">Date</label>
+            <input type="date" class="form-control" id="aDate" required>
+          </div>
+          <div class="col-12">
+            <label class="form-label">Content</label>
+            <textarea class="form-control" id="aContent" rows="3" required></textarea>
+          </div>
+          <div class="col-12">
+            <button class="btn btn-success"><i class="bi bi-plus-circle me-1"></i>Publish</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="card shadow-sm p-3">
+        <div class="table-responsive">
+          <table class="table align-middle" id="announcementTable">
+            <thead>
+              <tr><th>Title</th><th>Date</th><th>Content</th><th class="text-end">Actions</th></tr>
+            </thead>
+            <tbody><!-- populated by JS --></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- EVENTS -->
+    <section id="events" class="section d-none">
+      <div class="d-flex align-items-center justify-content-between mb-3">
+        <h4 class="mb-0">Events</h4>
+        <input id="eventSearch" class="form-control form-control-sm w-auto" placeholder="Search events..."/>
+      </div>
+
+      <div class="card shadow-sm p-3 mb-3">
+        <h6 class="mb-3">Add Event</h6>
+        <form id="eventForm" class="row g-2">
+          <div class="col-md-4">
+            <label class="form-label">Event Name</label>
+            <input type="text" class="form-control" id="eName" required>
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">Date</label>
+            <input type="date" class="form-control" id="eDate" required>
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">Location</label>
+            <input type="text" class="form-control" id="eLocation" required>
+          </div>
+          <div class="col-12">
+            <button class="btn btn-primary"><i class="bi bi-calendar-plus me-1"></i>Add Event</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="card shadow-sm p-3">
+        <div class="table-responsive">
+          <table class="table align-middle" id="eventsTable">
+            <thead>
+              <tr><th>Event</th><th>Date</th><th>Location</th><th class="text-end">Actions</th></tr>
+            </thead>
+            <tbody><!-- populated by JS --></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ARCHIVE -->
+    <section id="archive" class="section d-none">
+      <h4 class="mb-3">Archive</h4>
+
+      <ul class="nav nav-pills mb-3" id="archiveTabs">
+        <li class="nav-item"><button class="nav-link active" data-archpane="archAnnouncements">Past Announcements</button></li>
+        <li class="nav-item"><button class="nav-link" data-archpane="archEvents">Past Events</button></li>
+      </ul>
+
+      <div id="archAnnouncements" class="arch-pane">
+        <div class="d-flex justify-content-end mb-2">
+          <input id="archiveAnnSearch" class="form-control form-control-sm w-auto" placeholder="Search past announcements...">
+        </div>
+        <div class="card shadow-sm p-3">
+          <div class="table-responsive">
+            <table class="table align-middle" id="archiveAnnouncementTable">
+              <thead><tr><th>Title</th><th>Date</th><th>Content</th><th class="text-end">Actions</th></tr></thead>
+              <tbody><!-- JS --></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div id="archEvents" class="arch-pane d-none">
+        <div class="d-flex justify-content-end mb-2">
+          <input id="archiveEventSearch" class="form-control form-control-sm w-auto" placeholder="Search past events...">
+        </div>
+        <div class="card shadow-sm p-3">
+          <div class="table-responsive">
+            <table class="table align-middle" id="archiveEventsTable">
+              <thead><tr><th>Event</th><th>Date</th><th>Location</th><th class="text-end">Actions</th></tr></thead>
+              <tbody><!-- JS --></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- STUDENTS -->
+    <section id="students" class="section d-none">
+      <div class="d-flex align-items-center justify-content-between mb-3">
+        <h4 class="mb-0">Students</h4>
+        <input id="studentSearch" class="form-control form-control-sm w-auto" placeholder="Search students..."/>
+      </div>
+
+      <div class="card shadow-sm p-3">
+        <div class="table-responsive">
+          <table class="table align-middle" id="studentsTable">
+            <thead><tr><th>Name</th><th>Email</th><th>Program</th></tr></thead>
+            <tbody><!-- JS --></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROFILE -->
+    <section id="profile" class="section d-none">
+      <h4 class="mb-3">Admin Profile</h4>
+      <div class="card shadow-sm p-4" style="max-width:720px;">
+        <div class="text-center mb-3">
+          <img src="https://via.placeholder.com/100" class="rounded-circle mb-2" alt="Admin">
+          <h5 id="adminName">Alexander Pierce</h5>
+          <p class="text-muted">System Administrator</p>
+        </div>
+        <form id="profileForm" class="row g-3">
+          <div class="col-md-6">
+            <label class="form-label">Full Name</label>
+            <input type="text" class="form-control" value="Alexander Pierce" required/>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Email</label>
+            <input type="email" class="form-control" value="alexander@example.com" required/>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Phone</label>
+            <input type="text" class="form-control" value="+234 800 123 4567"/>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Role</label>
+            <input type="text" class="form-control" value="Admin"/>
+          </div>
+          <div class="col-12">
+            <button class="btn btn-primary" type="submit">Update Profile</button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- SETTINGS -->
+    <section id="settings" class="section d-none">
+      <h4 class="mb-3">Settings</h4>
+      <div class="card shadow-sm p-4" style="max-width:720px;">
+        <form id="passwordForm" class="row g-3">
+          <div class="col-md-6">
+            <label class="form-label">New Password</label>
+            <input type="password" id="newPassword" class="form-control" required/>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Confirm Password</label>
+            <input type="password" id="confirmPassword" class="form-control" required/>
+          </div>
+          <div class="col-12">
+            <div class="form-check form-switch">
+              <input class="form-check-input" type="checkbox" id="darkSwitch">
+              <label class="form-check-label" for="darkSwitch">Dark Mode</label>
+            </div>
+          </div>
+          <div class="col-12">
+            <button class="btn btn-primary" type="submit">Save Settings</button>
+          </div>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <!-- Confirm Modal (Delete / Archive) -->
+  <div class="modal fade" id="confirmModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 id="confirmTitle" class="modal-title">Confirm</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div id="confirmBody" class="modal-body">Are you sure?</div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button id="confirmOk" type="button" class="btn btn-danger">Yes, proceed</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS + App JS -->
+  <script src="./bootstrap.bundle.min.js"></script>
+  <script src="./adminjs.js"></script>
+</body>
+</html>
